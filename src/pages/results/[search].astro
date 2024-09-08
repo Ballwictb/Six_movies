@@ -1,0 +1,39 @@
+---
+import Layout from "@layout/Layout.astro";
+const { search } = Astro.params;
+import Search from "@components/Search";
+
+const response = await fetch(
+  "https://api.themoviedb.org/3/search/movie?query=" +
+    search +
+    "&api_key=3d9cfdcb69c3254f0cb45bf4e8df7d75"
+);
+
+const data = await response.json();
+const detail = "/detail/";
+const poster_url = "https://image.tmdb.org/t/p/w500/";
+---
+
+<Layout>
+  <Search client:load />
+  <div class="row">
+    {
+      data.results.map((value) => (
+        <div class="col-lg-3">
+          <div class="card mt-4" style="width: 18rem;">
+            <a href={detail + value.id}>
+              <img
+                src={poster_url + value.poster_path}
+                alt="poster"
+                class="card-img-top"
+              />
+            </a>
+            <div class="card-body">
+              <h5 class="card-title">{value.title}</h5>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</Layout>
